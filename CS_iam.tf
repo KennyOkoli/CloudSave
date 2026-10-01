@@ -1,5 +1,6 @@
 data "aws_iam_policy_document" "use-s3-policy"{
     statement{
+        effect = "Allow"
         actions = [
             "s3:ListBucket",
             "s3:GetObject",
@@ -7,12 +8,11 @@ data "aws_iam_policy_document" "use-s3-policy"{
             "s3:DeleteObject",
             "s3:GetBucketPolicy"
         ]
-        effect = "Allow"
-        resources = ["arn:aws:s3:${var.aws_region}:${var.account}:CS_s3/*"]
+        resources = ["arn:aws:s3:::CS_s3/*"]
        }
     statement{
-        actions = ["iam:ChangePassword"]
         effect = "Allow"
+        actions = ["iam:ChangePassword"]
         resources = ["*"]
     }
 }

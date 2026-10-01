@@ -1,3 +1,4 @@
 .terraform*
 terraform.tfstate*
 .terraform/
+jeffs_credentials.json

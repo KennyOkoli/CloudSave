@@ -2,3 +2,5 @@
 terraform.tfstate*
 .terraform/
 jeffs_credentials.json
+cloudsave*
+.$cloudsave*

@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "use-s3-policy"{
+/*data "aws_iam_policy_document" "use-s3-policy"{
     statement{
         effect = "Allow"
         actions = [
@@ -16,6 +16,7 @@ data "aws_iam_policy_document" "use-s3-policy"{
         resources = ["*"]
     }
 }
+*/
 
 resource "aws_iam_user" "Jeff"{
     name = "Jeff"
@@ -30,6 +31,7 @@ resource "aws_iam_user_login_profile" "user_jeff_login" {
     password_reset_required = true
 }
 
+/*
 resource "aws_iam_user_policy" "user_jeff_policy" {
     name = "accessS3_jeff"
     user = aws_iam_user.Jeff.name
@@ -46,4 +48,4 @@ resource "local_file" "jeffs_credentials"{
     })
 
     filename = "jeffs_credentials.json"
-}
+}*/

@@ -1,0 +1,8 @@
+ECS cluster provides orchestration for docker containers that are running as tasks on an infrastructure template
+ECS services offers the deployment, scaling, load balancing and networking of tasks (i.e containers)
+ECS task definition serves as a blueprint of how containers are deployed
+
+A task definition can contain one or more containers
+Tightly-couple containers can be deployed as one task
+Loosely-coupled containers can be deployed as seperate tasks
+

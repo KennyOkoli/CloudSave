@@ -8,9 +8,17 @@ terraform{
             source = "hashicorp/local"
             version = "~>2.9"
         }
+        tls = {
+            source = "hashicorp/tls"
+            version = "~>4.4"
+        }
     }
 }
 
 provider "aws"{
     region = "af-south-1"
+}
+
+module "CS_compute"{
+    source = "./CS_compute"
 }

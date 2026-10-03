@@ -1,4 +1,4 @@
-resource "aws_launch_template" "cs-container-instance"{
+/*resource "aws_launch_template" "cs-container-instance"{
     instance_type = "t3.micro"
     image_id = "ami-0d27e0fb3bac4d724"
     vpc_security_group_ids = [aws_security_group.db_sg[*].id] 
@@ -42,3 +42,4 @@ resource "aws_security_group_rule" "db_sg_ingress_4"{
     from_port = 22
     to_port = 22
 }
+*/

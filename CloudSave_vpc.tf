@@ -62,7 +62,7 @@ resource "aws_network_acl" "CS_acl_private" {
     subnet_ids = aws_subnet.CS_private_subnet[*].id
     ingress {
         rule_no = 1
-        cidr_block = aws_vpc.CloudSave.cidr_block
+        #cidr_block = aws_
         action = "allow"
         protocol = "tcp"
         from_port = 1024
@@ -149,10 +149,42 @@ resource "aws_network_acl" "CS_acl"{
         from_port = 443
         to_port = 443
     }
+    ingress{
+        rule_no = 2
+        protocol = "tcp"
+        cidr_block = "0.0.0.0/0"
+        action = "allow"
+        from_port = 443
+        to_port = 443
+    }
+    ingress{
+        rule_no = 3
+        protocol = "tcp"
+        cidr_block = var.CS_public_ip
+        action = "allow"
+        from_port = 80
+        to_port = 80
+    }
+    ingress{
+        rule_no = 4
+        protocol = "tcp"
+        cidr_block = "0.0.0.0/0"
+        action = "allow"
+        from_port = 80
+        to_port = 80
+    }
     egress{
         rule_no = 1
         protocol = "tcp"
         cidr_block = var.CS_public_ip
+        action = "allow"
+        from_port = 1024
+        to_port = 65535
+    }
+    egress{
+        rule_no = 1
+        protocol = "tcp"
+        cidr_block = "0.0.0.0/0"
         action = "allow"
         from_port = 1024
         to_port = 65535

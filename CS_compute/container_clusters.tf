@@ -9,26 +9,17 @@
 # Things to code
 # Name of the container
 
-/*
-resource "aws_ecs_service" "cs_comtainer_service"{
+
+resource "aws_ecs_service" "cs_container_service"{
     name = "cs_container_service"
     cluster = aws_ecs_cluster.cs_container_cluster.id
-    #task_arn
+    task_arn = aws_ecs_task_definition.cs_ecs_task_def.arn
     desired_count = 2
     #load_balancer {}
 }
 
 
-# For scaling
-# Things to compute
-# container id
-# task arn
-# desired count
-# load balancing
-# placement_groups
-
-
-resource "aws_ecs_task_definition" "cs_container_task_mng"{
+resource "aws_ecs_task_definition" "cs_ecs_task_def"{
     family = "whole_app"
     container_definitions = jsonencode([
         {

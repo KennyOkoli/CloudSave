@@ -1,4 +1,4 @@
-resource "aws_lb_target_group" "target_containers"{
+/*resource "aws_lb_target_group" "target_containers"{
     name = "target_containers"
     vpc_id = aws_vpc.CloudSave
     target_type = "ecs"
@@ -13,4 +13,4 @@ resource "aws_lb_target_group" "target_containers"{
       healthy_threshold = 3
       unhealthy_threshold = 2
     }
-}
+}*/

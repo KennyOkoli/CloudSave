@@ -42,9 +42,17 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rules" {
     from_port = 22
     to_port = 22
 }
-/*resource "aws_autoscaling_group" "container_compute_scale" {
+resource "aws_autoscaling_group" "container_compute_scale" {
     name = "container_compute_scale"
-    vpc_zone_identifier = aws_vpc.CloudSave.id
-    availability_zones = aws_private_subnets[*].id
+    vpc_zone_identifier = aws_private_subnets[*].id
+    health_check_type = "ec2"
+    health_check_grace_period = 300
+    desired_capacity = 2
+    min_size = 2
+    max_size = 3
 
-}*/
+    launch_template {
+      id = aws_launch_template.container_compute.id
+      version = "$LATEST"
+    }
+}

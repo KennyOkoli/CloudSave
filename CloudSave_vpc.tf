@@ -14,27 +14,31 @@ resource "aws_subnet" "CS_public_subnet"{
     cidr_block = "172.0.${count.index}.0/24"
     availability_zone = data.aws_availability_zones.africa_az.names[count.index]
     map_public_ip_on_launch = true
+
+    tags ={
+        name = var.public_subnet_tags[count.index]
+    }
 }
 
 resource "aws_subnet" "CS_private_subnet"{
     count = 2
     vpc_id = aws_vpc.CloudSave.id
-    cidr_block = "172.0.${count.index + 30}.0/24"
+    cidr_block = "172.0.${count.index + 100}.0/24"
     availability_zone = data.aws_availability_zones.africa_az.names[count.index]
+
+    tags ={
+        name = var.private_subnets_tags[count.index]
+    }
 }
 
-resource "aws_eips" "cs_eip" {
+resource "aws_eip" "cs_eip" {
     count = 2
-}
-
-variable "nat_tags" {
-    default = ["nat-af-1a", "nat-af-1b"]
 }
 
 resource "aws_nat_gateway" "cs_nat_gateway" {
     count = 2
     vpc_id = aws_vpc.CloudSave.id
-    allocation_id = aws_eips.cs_eip[count.index].id
+    allocation_id = aws_eip.cs_eip[count.index].id
     subnet_id = aws_subnet.CS_public_subnet[count.index].id
 
     tags ={
@@ -46,15 +50,9 @@ resource "aws_route_table" "CS_private-route"{
     count = 2
     vpc_id = aws_vpc.CloudSave.id
     route{
-        cidr_block = ["0.0.0.0/0"]
+        cidr_block = var.public_ip
         nat_gateway_id = aws_nat_gateway.cs_nat_gateway[count.index].id
     }
-}
-
-resource "aws_route_table_association" "route_private_subnet" {
-    count = 2
-    route_table_id = aws_route_table.CS_private-route.id
-    subnet_id = aws_subnet.CS_private_subnet[*].id
 }
 
 resource "aws_network_acl" "CS_acl_private" {
@@ -62,7 +60,7 @@ resource "aws_network_acl" "CS_acl_private" {
     subnet_ids = aws_subnet.CS_private_subnet[*].id
     ingress {
         rule_no = 1
-        #cidr_block = aws_
+        cidr_block = aws_vpc.CloudSave.cidr_block
         action = "allow"
         protocol = "tcp"
         from_port = 1024
@@ -116,8 +114,8 @@ resource "aws_network_acl" "CS_acl_private" {
         from_port = 80
         to_port = 80
     }
-    ingress {
-        rule_no = 2
+    egress {
+        rule_no = 4
         cidr_block = aws_vpc.CloudSave.cidr_block
         action = "allow"
         protocol = "tcp"
@@ -133,18 +131,18 @@ resource "aws_internet_gateway" "CS_gateway"{
 resource "aws_route_table" "CS_public_route"{
     vpc_id = aws_vpc.CloudSave.id
     route {
-        cidr_block = var.CS_public_ip
+        cidr_block = var.public_ip
         gateway_id = aws_internet_gateway.CS_gateway.id
     }
 }
 
-resource "aws_network_acl" "CS_acl"{
+resource "aws_network_acl" "CS_public_acl"{
     vpc_id = aws_vpc.CloudSave.id
     subnet_ids = aws_subnet.CS_public_subnet[*].id
     ingress{
         rule_no = 1
         protocol = "tcp"
-        cidr_block = var.CS_public_ip
+        cidr_block = var.public_ip
         action = "allow"
         from_port = 443
         to_port = 443
@@ -152,31 +150,23 @@ resource "aws_network_acl" "CS_acl"{
     ingress{
         rule_no = 2
         protocol = "tcp"
-        cidr_block = "0.0.0.0/0"
+        cidr_block = var.public_ip
         action = "allow"
-        from_port = 443
-        to_port = 443
+        from_port = 80
+        to_port = 80
     }
     ingress{
         rule_no = 3
         protocol = "tcp"
-        cidr_block = var.CS_public_ip
+        cidr_block = var.public_ip
         action = "allow"
-        from_port = 80
-        to_port = 80
+        from_port = 22
+        to_port = 22
     }
     ingress{
         rule_no = 4
         protocol = "tcp"
-        cidr_block = "0.0.0.0/0"
-        action = "allow"
-        from_port = 80
-        to_port = 80
-    }
-    egress{
-        rule_no = 1
-        protocol = "tcp"
-        cidr_block = var.CS_public_ip
+        cidr_block = var.public_ip
         action = "allow"
         from_port = 1024
         to_port = 65535
@@ -184,15 +174,28 @@ resource "aws_network_acl" "CS_acl"{
     egress{
         rule_no = 1
         protocol = "tcp"
-        cidr_block = "0.0.0.0/0"
+        cidr_block = var.public_ip
         action = "allow"
-        from_port = 1024
-        to_port = 65535
+        from_port = 0
+        to_port = 0
     }
+    
 }
 
 resource "aws_route_table_association" "CS_route_public_subnet" {
     count = 2
     route_table_id = aws_route_table.CS_public_route.id
     subnet_id = aws_subnet.CS_public_subnet[count.index].id
+}
+
+resource "aws_route_table_association" "route_private_subnet" {
+    count = 2
+    route_table_id = aws_route_table.CS_private-route[count.index].id
+    subnet_id = aws_subnet.CS_private_subnet[count.index].id
+}
+
+resource "aws_network_acl_association" "nacls_private"{
+    count = 2
+    network_acl_id = aws_network_acl.CS_acl_private.id
+    subnet_id = aws_subnet.CS_private_subnet[count.index].id
 }

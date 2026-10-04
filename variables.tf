@@ -33,3 +33,4 @@ variable "public_subnet_tags"{
 variable "key_name" {
     default = "cs_key_pair"
 }
+

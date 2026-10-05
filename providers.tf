@@ -19,10 +19,19 @@ provider "aws"{
     region = "af-south-1"
 }
 
+
 module "CS_compute"{
     source = "./CS_compute"
     vpc_id = aws_vpc.CloudSave.id
     vpc_cidr = aws_vpc.CloudSave.cidr_block
     private_subnet = aws_subnet.CS_private_subnet[*].id
     ec2_key = var.key_name
+    public_ip = var.public_ip
+}
+
+module "CS_rds"{
+    source = "./CS_rds"
+    vpc_id = aws_vpc.CloudSave.id
+    private_cidr_blocks = aws_subnet.CS_private_subnet[*].cidr_block
+    vpc_cidr = var.CS_cidr_block
 }

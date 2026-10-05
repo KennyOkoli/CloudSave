@@ -1,2 +1,2 @@
 aws ssm start-session \
---target i-0123456789abcdef0
+--target i-0123456789abcdef0 

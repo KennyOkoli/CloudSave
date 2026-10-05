@@ -6,3 +6,8 @@ A task definition can contain one or more containers
 Tightly-couple containers can be deployed as one task
 Loosely-coupled containers can be deployed as seperate tasks
 
+aws ssm start-session `
+  --target i-04861107db813bbfc `
+  --region af-south-1
+
+3306

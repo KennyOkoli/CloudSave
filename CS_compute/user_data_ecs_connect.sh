@@ -1,14 +1,19 @@
 #!/bin/bash
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 
 dnf update -y
 
-echo "ECS_CLUSTER = cs_container_cluster" > /etc/ecs/ecs.config
+#echo "ECS_CLUSTER = cs_container_cluster" > /etc/ecs/ecs.config
 
 dnf install -y amazon-ssm-agent
 dnf install -y ecs-init
+dnf install mariadb105
 
-dnf systemctl start amazon-ssm-agent
-dnf systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+systemctl enable amazon-ssm-agent
 
-dnf systemctl start --now ecs
-dnf systemctl enable --now ecs
+systemctl start --now ecs
+systemctl enable --now ecs
+
+systemctl start mariadb105
+systemctl enable mariadb105

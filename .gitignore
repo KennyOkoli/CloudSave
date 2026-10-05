@@ -5,3 +5,5 @@ jeffs_credentials.json
 cloudsave*
 .$cloudsave*
 local/*
+mysql_password*
+mysql_username*

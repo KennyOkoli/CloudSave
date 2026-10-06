@@ -121,6 +121,14 @@ resource "aws_network_acl" "CS_acl_private" {
         from_port = 22
         to_port = 22
     }
+    egress {
+        rule_no = 5
+        cidr_block = var.public_ip
+        action = "allow"
+        protocol = "tcp"
+        from_port = 3306
+        to_port = 3306
+    }
 }
 
 

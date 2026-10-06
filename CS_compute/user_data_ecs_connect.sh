@@ -7,7 +7,7 @@ dnf update -y
 
 dnf install -y amazon-ssm-agent
 dnf install -y ecs-init
-dnf install mariadb105
+dnf install -y mariadb105
 
 systemctl start amazon-ssm-agent
 systemctl enable amazon-ssm-agent

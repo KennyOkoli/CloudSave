@@ -11,3 +11,11 @@ aws ssm start-session `
   --region af-south-1
 
 3306
+
+mysql -h mydb.abc123.us-east-1.rds.amazonaws.com \
+-u admin \
+-p
+
+
+
+mysql -h terraform-ab330d2c4d787147b2c7fab593.czqsco2eaxj9.af-south-1.rds.amazonaws.com -P 3306 -u CloudSave_Admin -p --ssl --ssl-ca=./global-bundle.pem

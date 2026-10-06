@@ -67,16 +67,6 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_22" {
     to_port = 22
 }
 
-/*
-resource "aws_security_group_rule" "ecs_ec2_sg_rule_3306" {
-    security_group_id = aws_security_group.ecs_ec2_sg.id
-    type = "ingress"
-    protocol = "tcp"
-    cidr_blocks = [var.vpc_cidr]
-    from_port = 3306
-    to_port = 3306
-}
-*/
 resource "aws_security_group_rule" "ecs_ec2_sg_rule_egr" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "egress"

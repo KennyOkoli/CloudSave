@@ -34,4 +34,5 @@ module "CS_rds"{
     vpc_id = aws_vpc.CloudSave.id
     private_cidr_blocks = aws_subnet.CS_private_subnet[*].cidr_block
     vpc_cidr = var.CS_cidr_block
+    azones = data.aws_availability_zones.africa_az.names[*]
 }

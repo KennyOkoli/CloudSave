@@ -7,3 +7,6 @@ cloudsave*
 local/*
 mysql_password*
 mysql_username*
+cs_private_key
+cs_pub_key
+db_endpoint

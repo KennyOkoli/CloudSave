@@ -1,4 +1,4 @@
-variable "ec2_key" {
+/*variable "ec2_key" {
   type = string
 }
 resource "tls_private_key" "cloudsave_key_pair"{
@@ -20,3 +20,4 @@ resource "local_file" "cs_public_key" {
   content = tls_private_key.cloudsave_key_pair.public_key_openssh
   filename = "cs_pub_key"
 }
+*/

@@ -1,13 +1,5 @@
-variable "vpc_id" {
-    type = string
-}
-
 variable "db_subnet_tags" {
     default = ["db_subnet_1", "db_subnet_2"]
-}
-
-variable "vpc_cidr" {
-    type = string
 }
 
 variable "private_cidr_blocks" {
@@ -17,7 +9,7 @@ variable "private_cidr_blocks" {
 variable "azones"{
     type = list(string)
 }
-
+/*
 resource "aws_db_parameter_group" "db_parameter" {
     name_prefix = "mysql84-parameter"
     family = "mysql8.4"
@@ -146,3 +138,4 @@ resource "local_file" "db_endpoint_txt" {
     content = aws_db_instance.CloudSave_db.endpoint
     filename = "db_endpoint"
 }
+*/

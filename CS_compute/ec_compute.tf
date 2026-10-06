@@ -14,13 +14,14 @@ variable "public_ip" {
     type = string
 }
 
+/*
 resource "aws_launch_template" "container_compute" {
     instance_type = "t3.micro"
     image_id = "ami-0d13047a040c6a71a"
     key_name = aws_key_pair.cs_aws_public_pair.key_name
     vpc_security_group_ids = [aws_security_group.ecs_ec2_sg.id]
     iam_instance_profile {
-      name = aws_iam_instance_profile.ec2_instance_profile_ssm.name
+      name = aws_iam_instance_profile.ec2_instance_profile.name
     }
     user_data = filebase64("${path.module}/user_data_ecs_connect.sh")
 }
@@ -90,3 +91,5 @@ resource "aws_autoscaling_group" "container_compute_scale" {
       version = "$Latest"
     }
 }
+
+*/

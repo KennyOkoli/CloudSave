@@ -19,7 +19,6 @@ provider "aws"{
     region = "af-south-1"
 }
 
-/*
 module "CS_compute"{
     source = "./CS_compute"
     vpc_id = aws_vpc.CloudSave.id
@@ -32,4 +31,3 @@ module "CS_compute"{
     account = var.account
     region = var.aws_region
 }
-*/

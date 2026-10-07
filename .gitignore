@@ -2,7 +2,6 @@
 terraform.tfstate*
 .terraform/
 jeffs_credentials.json
-cloudsave*
 .$cloudsave*
 local/*
 mysql_password*
@@ -10,3 +9,5 @@ mysql_username*
 cs_private_key
 cs_pub_key
 db_endpoint
+Docker/
+*.drawio

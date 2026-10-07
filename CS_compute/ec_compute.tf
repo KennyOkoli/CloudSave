@@ -14,7 +14,7 @@ variable "public_ip" {
     type = string
 }
 
-/*
+
 resource "aws_launch_template" "container_compute" {
     instance_type = "t3.micro"
     image_id = "ami-0d13047a040c6a71a"
@@ -92,4 +92,3 @@ resource "aws_autoscaling_group" "container_compute_scale" {
     }
 }
 
-*/

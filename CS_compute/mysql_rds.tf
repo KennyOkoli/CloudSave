@@ -9,7 +9,7 @@ variable "private_cidr_blocks" {
 variable "azones"{
     type = list(string)
 }
-/*
+
 resource "aws_db_parameter_group" "db_parameter" {
     name_prefix = "mysql84-parameter"
     family = "mysql8.4"
@@ -138,4 +138,3 @@ resource "local_file" "db_endpoint_txt" {
     content = aws_db_instance.CloudSave_db.endpoint
     filename = "db_endpoint"
 }
-*/

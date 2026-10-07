@@ -1,4 +1,4 @@
-/*data "aws_iam_policy_document" "trust_policy_ec2"{
+data "aws_iam_policy_document" "trust_policy_ec2"{
     statement {
       effect = "Allow"
       principals{
@@ -30,22 +30,18 @@ resource "aws_iam_policy" "use_s3" {
             "Version": "2012-10-17",
             "Statement": [
             {
-                "Sid": "ConnectToBucket",
+                "Sid": "ConnectAndUseBucketAndObjects",
                 "Action": [
-                    "s3:ListBucket"
-                ],
-                "Effect": "Allow",
-                "Resource": [aws_s3_bucket.cloudSaveBucket.arn]
-            },                
-                {
-                "Sid": "ConnectToObjects",
-                "Action": [
+                    "s3:ListBucket",
                     "s3:GetObject",
                     "s3:PutObject",
                     "s3:DeleteObject"
                 ],
-                "Effect":"Allow",
-                "Resource": ["${aws_s3_bucket.cloudSaveBucket.arn}/*"]
+                "Effect": "Allow",
+                "Resource": [
+                    aws_s3_bucket.cloudSaveBucket.arn,
+                    "${aws_s3_bucket.cloudSaveBucket.arn}/*"
+                    ]
             }]
 })
 }
@@ -59,4 +55,3 @@ resource "aws_iam_instance_profile" "ec2_instance_profile" {
     name = "ec2_instance_profile"
     role = aws_iam_role.ec2_instance_role.name   
 }
-*/

@@ -1,0 +1,29 @@
+const {
+  S3Client,
+  ListBucketsCommand
+} = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  region: "us-east-1"
+});
+
+async function test() {
+  const result = await s3.send(
+    new ListBucketsCommand({})
+  );
+
+  console.log(result.Buckets);
+}
+
+test();
+
+
+const bucket = process.env.S3_BUCKET;
+
+await s3.send(
+  new PutObjectCommand({
+    Bucket: bucket,
+    Key: "uploads/test.txt",
+    Body: "Hello World"
+  })
+);

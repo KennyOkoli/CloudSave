@@ -23,6 +23,7 @@ resource "aws_db_parameter_group" "db_parameter" {
 resource "aws_db_instance" "CloudSave_db"{
     db_name = "CloudSave_db"
     engine = "mysql"
+    identifier = "cloudsave"
     engine_version = "8.4.11"
     instance_class = "db.t3.micro"
     storage_type = "gp3"
@@ -58,7 +59,6 @@ resource "aws_security_group_rule" "mysql_db_sg_rule_eg"{
     from_port = 1024
     to_port = 65535
 }
-
 
 
 resource "aws_subnet" "db_subnet" {

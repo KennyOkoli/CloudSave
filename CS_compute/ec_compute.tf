@@ -17,7 +17,7 @@ variable "public_ip" {
 variable "public_subnet" {
     type = list(string)
 }
-
+/*
 resource "aws_launch_template" "container_compute" {
     instance_type = "t3.micro"
     image_id = "ami-0d13047a040c6a71a"
@@ -39,7 +39,8 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_443" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 443
     to_port = 443
 }
@@ -48,7 +49,8 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_eph" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 1024
     to_port = 65535
 }
@@ -57,7 +59,8 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_80" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 80
     to_port = 80
 }
@@ -66,16 +69,28 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_22" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 22
     to_port = 22
+}
+
+resource "aws_security_group_rule" "ecs_ec2_sg_rule_3000" {
+    security_group_id = aws_security_group.ecs_ec2_sg.id
+    type = "ingress"
+    protocol = "tcp"
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    from_port = 4000
+    to_port = 4000
 }
 
 resource "aws_security_group_rule" "ecs_ec2_sg_rule_egr" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "egress"
     protocol = "tcp"
-    source_security_group_id = aws_security_group.ecs_ec2_sg.id
+    cidr_blocks = [var.public_ip]
+    #source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 0
     to_port = 65535
 }
@@ -87,7 +102,7 @@ resource "aws_autoscaling_group" "container_compute_scale" {
     health_check_grace_period = 300
     desired_capacity = 2
     min_size = 2
-    max_size = 3
+    max_size = 4
 
     launch_template {
       id = aws_launch_template.container_compute.id
@@ -99,13 +114,14 @@ resource "aws_lb_target_group" "target_containers"{
     name = "target-containers"
     vpc_id = var.vpc_id
     target_type = "instance"
-    port = 80
+    port = 4000
     protocol = "HTTP"
 
     health_check {
-      port = 80
+      port = 4000
+      path = "/"
       protocol = "HTTP"
-      interval = 30
+      interval = 10
       timeout = 5
       healthy_threshold = 3
       unhealthy_threshold = 2
@@ -119,3 +135,21 @@ resource "aws_alb" "cloudsave_url" {
     subnets = var.public_subnet
     security_groups = [aws_security_group.ecs_ec2_sg.id]
 }
+
+resource "aws_alb_listener" "url_listener" {
+    load_balancer_arn = aws_alb.cloudsave_url.arn
+    protocol = "HTTP"
+    port = 80
+
+    default_action {
+      type = "forward"
+      forward {
+        target_group {
+          arn = aws_lb_target_group.target_containers.arn
+        }
+      }
+    }
+}
+
+
+*/

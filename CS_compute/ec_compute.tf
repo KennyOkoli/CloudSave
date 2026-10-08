@@ -14,6 +14,9 @@ variable "public_ip" {
     type = string
 }
 
+variable "public_subnet" {
+    type = list(string)
+}
 
 resource "aws_launch_template" "container_compute" {
     instance_type = "t3.micro"
@@ -36,7 +39,7 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_443" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    cidr_blocks = [var.public_ip]
+    source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 443
     to_port = 443
 }
@@ -45,7 +48,7 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_eph" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    cidr_blocks = [var.public_ip]
+    source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 1024
     to_port = 65535
 }
@@ -54,7 +57,7 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_80" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    cidr_blocks = [var.public_ip]
+    source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 80
     to_port = 80
 }
@@ -63,7 +66,7 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_22" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "ingress"
     protocol = "tcp"
-    cidr_blocks = [var.public_ip]
+    source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 22
     to_port = 22
 }
@@ -72,7 +75,7 @@ resource "aws_security_group_rule" "ecs_ec2_sg_rule_egr" {
     security_group_id = aws_security_group.ecs_ec2_sg.id
     type = "egress"
     protocol = "tcp"
-    cidr_blocks = [var.public_ip]
+    source_security_group_id = aws_security_group.ecs_ec2_sg.id
     from_port = 0
     to_port = 65535
 }
@@ -92,3 +95,27 @@ resource "aws_autoscaling_group" "container_compute_scale" {
     }
 }
 
+resource "aws_lb_target_group" "target_containers"{
+    name = "target-containers"
+    vpc_id = var.vpc_id
+    target_type = "instance"
+    port = 80
+    protocol = "HTTP"
+
+    health_check {
+      port = 80
+      protocol = "HTTP"
+      interval = 30
+      timeout = 5
+      healthy_threshold = 3
+      unhealthy_threshold = 2
+    }
+}
+
+resource "aws_alb" "cloudsave_url" {
+    name = "cloudsave-url"
+    internal = false
+    load_balancer_type = "application"
+    subnets = var.public_subnet
+    security_groups = [aws_security_group.ecs_ec2_sg.id]
+}

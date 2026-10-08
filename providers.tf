@@ -30,4 +30,5 @@ module "CS_compute"{
     azones = data.aws_availability_zones.africa_az.names
     account = var.account
     region = var.aws_region
+    public_subnet = aws_subnet.CS_public_subnet[*].id
 }
